@@ -1,8 +1,12 @@
 # Databricks Apps Configuration
-# For Dash application with gunicorn WSGI server
+# Matches successful deployment from 2025-11-05
 
-command: ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "120", "--worker-class", "sync", "app:server"]
+command: ["gunicorn", "app:server", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120"]
 
 env:
-  - name: DASH_DEBUG
+  - name: ENV
+    value: "production"
+  - name: PORT
+    value: "8000"
+  - name: DEBUG
     value: "False"

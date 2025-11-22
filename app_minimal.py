@@ -113,4 +113,6 @@ def update_graph(n):
 
     return fig
 
-# No if __name__ == '__main__' block for Databricks Apps
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 8000))
+    app.run_server(debug=False, host='0.0.0.0', port=port)
