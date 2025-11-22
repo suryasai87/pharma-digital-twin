@@ -1,0 +1,45 @@
+# Databricks Apps Deployment Configuration
+# Enhanced configuration for production deployment
+
+command: ["gunicorn", "backend.main:app", "--bind", "0.0.0.0:8000", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--timeout", "300"]
+
+env:
+  - name: ENV
+    value: "production"
+  - name: PORT
+    value: "8000"
+  - name: DEBUG
+    value: "False"
+  - name: DATABRICKS_WAREHOUSE_ID
+    value: "${var.warehouse_id}"
+  - name: ENABLE_REAL_TIME_STREAMING
+    value: "true"
+  - name: ML_MODEL_ENDPOINT
+    value: "databricks-model-serving://contamination-detector-v2"
+
+# Resources
+resources:
+  - name: sql_warehouse
+    description: "SQL Warehouse for low-latency queries"
+    warehouse_id: "${var.warehouse_id}"
+
+  - name: model_serving
+    description: "Real-time ML inference endpoints"
+    endpoints:
+      - contamination_detector
+      - yield_predictor
+
+# Health checks
+health_check:
+  path: "/health"
+  interval: 30
+  timeout: 10
+  retries: 3
+
+# Autoscaling
+autoscaling:
+  min_instances: 1
+  max_instances: 10
+  target_cpu_percent: 70
+  scale_up_cooldown: 60
+  scale_down_cooldown: 300

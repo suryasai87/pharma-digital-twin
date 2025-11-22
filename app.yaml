@@ -1,9 +1,16 @@
-command: ["gunicorn", "app:server", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120"]
+# Databricks Apps Configuration for Pharma Digital Twin
+# Optimized for Dash application deployment
+
+command: ["python", "app.py"]
 
 env:
-  - name: ENV
-    value: "production"
   - name: PORT
     value: "8000"
-  - name: DEBUG
-    value: "False"
+  - name: ENV
+    value: "production"
+  - name: PYTHONPATH
+    value: "/app"
+
+# Optional: FastAPI backend endpoint (if deployed separately)
+# - name: API_BASE_URL
+#   value: "http://localhost:8001/api/v1"
